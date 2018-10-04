@@ -19,9 +19,9 @@
 
 命令: rsync -vzrtopg --port=873 --progress --password-file=./rpass  /mnt/sdcard2/rsynctest/ rtest@47.91.141.93::rfile
 
-* --password-file 本地密码文件，使用该参数将不用问答形式输入密码，密码排列方式，一行一个密码
-* rtest@47.91.141.93::rfile  指定用户名rtest，rfile为远程配置的同步目录名
-* --port windows同步服务器端口号 873 允许访问
+    * --password-file 本地密码文件，使用该参数将不用问答形式输入密码，密码排列方式，一行一个密码
+    * rtest@47.91.141.93::rfile  指定用户名rtest，rfile为远程配置的同步目录名
+    * --port windows同步服务器端口号 873 允许访问
 
 
 
