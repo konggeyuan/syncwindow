@@ -9,11 +9,13 @@
 2. 将rsync拷贝至/system/xbin 下，需要手机有root权限，就能运行rsync命令
 
 
-
-
 ### 运行
 
+
+
 1. 手机端：通过java调用一条命令，将本地某一个文件夹与远程同步，增量同步
+
+
 
 命令: rsync -vzrtopg --port=873 --progress --password-file=./rpass  /mnt/sdcard2/rsynctest/ rtest@47.91.141.93::rfile
 
@@ -22,7 +24,10 @@
 * --port windows同步服务器端口号 873 允许访问
 
 
+
 2. 服务端(windows)配置文件
+
+
 
 use chroot = false
 strict modes = false
