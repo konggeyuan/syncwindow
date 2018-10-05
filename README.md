@@ -57,3 +57,36 @@ GID = 0
 
 /cygdrive/d/rsyncfile 驱动器D盘下的rsyncfile，并将该文件夹赋予文件夹读写权限
 
+
+
+3. 建立系统定时任务(可选)
+
+通过系统层级设定定时任务，结合命令行方式执行定时自动同步。这部分可选，建议是通过apk直接调用命令行的方式。
+
+    * 安装 stericson.busybox.apk 、term-init.sh、SP8-CRON_v2.zip 至手机
+    
+    ```
+    adb install stericson.busybox.apk 
+    adb push term-init.sh /mnt/sdcard2/
+    adb SP8-CRON_v2.zip
+
+    ```
+
+    * 通过屏幕打开busybox APP,并选择完整安装
+    * root 权限启动init环境shell脚本, 解压缩SP8-CRON_v2.zip，并运行其中的shell,然后重启手机
+    
+    ```
+    
+    sh /mnt/sdcard2/term-init.sh
+    unzip /mnt/sdcard2/SP8-CRON_v2.zip && /mnt/sdcard2/SP8-CRON_v2/Install.sh
+    reboot
+
+    ```
+
+    * crontab 中建立定时运行脚本, 运行crontab -e 命令,每5分钟运行一次同步脚本
+    ```
+    mount -o remount,rw /
+    crontab -e
+    
+    */5 * * * * /mnt/sdcard2/rsync.sh > /data/cron-rsync.log
+    ```
