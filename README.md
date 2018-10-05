@@ -63,6 +63,7 @@ GID = 0
 
 通过系统层级设定定时任务，结合命令行方式执行定时自动同步。这部分可选，建议是通过apk直接调用命令行的方式。
 
+
     * 安装 stericson.busybox.apk 、term-init.sh、SP8-CRON_v2.zip 至手机
     
     ```
@@ -71,6 +72,7 @@ GID = 0
     adb SP8-CRON_v2.zip
 
     ```
+
 
     * 通过屏幕打开busybox APP,并选择完整安装
     * root 权限启动init环境shell脚本, 解压缩SP8-CRON_v2.zip，并运行其中的shell,然后重启手机
@@ -82,6 +84,7 @@ GID = 0
     reboot
 
     ```
+
 
     * crontab 中建立定时运行脚本, 运行crontab -e 命令,每5分钟运行一次同步脚本
     ```
