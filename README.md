@@ -66,7 +66,7 @@ GID = 0
 
     - 安装 stericson.busybox.apk 、term-init.sh、SP8-CRON_v2.zip 至手机
     
-    ```Shell
+    ```
     adb install stericson.busybox.apk 
     adb push term-init.sh /mnt/sdcard2/
     adb SP8-CRON_v2.zip
