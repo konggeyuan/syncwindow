@@ -49,19 +49,19 @@ GID = 0
 
    * secrets file 服务器端账号密码
 
-文件格式: 用户名:密码  例如：rtest:1234 
+> 文件格式: 用户名:密码  例如：rtest:1234 
 每行一条
 
 
    * path 指定同步目录 
 
-/cygdrive/d/rsyncfile 驱动器D盘下的rsyncfile，并将该文件夹赋予文件夹读写权限
+> /cygdrive/d/rsyncfile 驱动器D盘下的rsyncfile，并将该文件夹赋予文件夹读写权限
 
 
 
 3. 建立系统定时任务(可选)
 
-通过系统层级设定定时任务，结合命令行方式执行定时自动同步。这部分可选，建议是通过apk直接调用命令行的方式。
+> 通过系统层级设定定时任务，结合命令行方式执行定时自动同步。这部分可选，建议是通过apk直接调用命令行的方式。
 
 
     * 安装 stericson.busybox.apk 、term-init.sh、SP8-CRON_v2.zip 至手机
