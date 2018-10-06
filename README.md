@@ -1,5 +1,6 @@
 # syncwindow
-通过手机同步本地文件，rsync到远端服务器
+通过io事件监视文件夹文件变化并将新增文件adb push至指定手机端路径。
+通过手机同步本地文件，rsync到远端服务器。
 
 
 ### 安装
@@ -7,6 +8,8 @@
 1. word中涵盖了windows版本的rsync的安装（涵盖了配置目录）
 
 2. 将rsync拷贝至/system/xbin 下，需要手机有root权限，就能运行rsync命令
+
+3.winadbtrans目录下为windows客户机程序，adb程序包及程序须在同一目录，否则应修改代码，本地监控路径与手机端监控路径见脚本。
 
 
 ### 运行
@@ -94,3 +97,7 @@ GID = 0
     
     */5 * * * * /mnt/sdcard2/rsync.sh > /data/cron-rsync.log
     ```
+#### 4. 客户机(windows)程序配置
+目录参数见py脚本，调试完成后使用pyinstaller插件配合 -f -w参数生产独立单可执行文件
+打包可执行文件前应注释或重定向所有shell输入输出，否则-w参数将造成程序错误
+移植至客户机时应使用计划任务或其他方式实现自启，应清理客户机其他adb自启类条目以免干扰
