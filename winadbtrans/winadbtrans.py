@@ -13,8 +13,9 @@ import ctypes
 
 
 
-workdir = u'E:\\test'   #本地目录
-remotedir = u'/storage/emulated/0/test/'     #手机端目录
+workupdir = u'D:\\syncuptest'   #本地上传目录
+workdldir = u'D:\\syncdltest'   #本地下载目录
+remotedir = u'/storage/emulated/0/syncfile/'     #手机端目录
 filelist = []
 
 def adb_start():
@@ -39,7 +40,7 @@ def push_file(target_file):
     tmpfilename = str(time.time()) + os.path.splitext(target_file)[-1]  #adb不支持空格及中文路径，只识别ascii故重命名处理
     #print tmpfilename
     shutil.copyfile(target_file,tmpfilename)
-    cmd = "adb push " + tmpfilename + remotedir   #sync仅支持data/system两个路径且比对读写大量零时文件，故使用push方案
+    cmd = "adb push " + tmpfilename + remotedir   #sync仅支持data/system两个路径且比对读写大量临时文件，故使用push方案
     #print cmd
     result = subprocess.Popen(cmd, shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE).communicate()[0]
     if len(result) < 1:  #有待调试出错策略
@@ -97,7 +98,7 @@ if __name__ == "__main__":
     #print dev
     observer = Observer()
     event_handler = FileEventHandler()
-    observer.schedule(event_handler,workdir,True)
+    observer.schedule(event_handler,workupdir,True)
     observer.start()
     try:
         while True:
