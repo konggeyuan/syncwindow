@@ -93,7 +93,7 @@ class FileEventHandler(FileSystemEventHandler):
             #print "directory moved from %s to %s" % (event.src_path,event.dest_path)
             return None
         else:
-            upfilelist.append("%s" % event.src_path)
+            upfilelist.append("%s" % event.dest_path)
             #print "file moved from %s to %s" % (event.src_path,event.dest_path)
             return None
 
