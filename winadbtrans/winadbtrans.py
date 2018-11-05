@@ -10,13 +10,17 @@ import sys
 import getpass
 import shutil
 import ctypes
+import filecmp
 
 
 
 workupdir = u'D:\\syncuptest'   #本地上传目录
 workdldir = u'D:\\syncdltest'   #本地下载目录
-remotedir = u'/storage/emulated/0/syncfile/'     #手机端目录
-filelist = []
+remoteupdir = u'/storage/emulated/0/syncfile/'     #手机端上传目录
+remotedldir = u'/storage/emulated/0/syncfiledl/'     #手机端下载目录
+remotedllistfile = u'update.txt'    #手机端下载目录中更新列表文件
+upfilelist = []   #待上传
+dlfilelist = []   #待下载
 
 def adb_start():
     cmd = "adb start-server"
@@ -40,15 +44,45 @@ def push_file(target_file):
     #tmpfilename = str(time.time()) + os.path.splitext(target_file)[-1]  #adb不支持空格及中文路径，只识别ascii故重命名处理
     tmpfilename = os.path.basename(target_file)   #根据需求，生产上传文件为ID+DATE文件名，全为ASCII且无需重命名
     #print tmpfilename
-    shutil.copyfile(target_file,tmpfilename)
-    cmd = "adb push " + tmpfilename +" "+ remotedir   #sync仅支持data/system两个路径且比对读写大量临时文件，故使用push方案
+    try:
+        shutil.copyfile(target_file,tmpfilename)
+    except IOError:
+        upfilelist.pop(0)
+        return False
+    cmd = "adb push " + tmpfilename + " " + remoteupdir   #sync仅支持data/system两个路径且比对读写大量临时文件，故使用push方案
     #print cmd
     result = subprocess.Popen(cmd, shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE).communicate()[0]
     if len(result) < 1:  #有待调试出错策略
-        filelist.pop(0)  #成功后移除列表第一项
+        upfilelist.pop(0)  #成功后移除列表第一项
         os.remove(tmpfilename) 
         return True
     return False
+
+def check_update():
+    cmd = "adb pull " + remotedldir + remotedllistfile + " " + "update.list" #adb pull获得更新表
+    #print cmd
+    result = subprocess.Popen(cmd, shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE).communicate()[0]
+    #print os.path.exists('update.listold')
+    cmpresult = False
+    if os.path.exists('update.listold'):
+        cmpresult = filecmp.cmp("update.list","update.listold")   #对比新旧表
+    #print cmpresult
+    if not cmpresult:
+        shutil.copyfile("update.list","update.listold")   #如果有更新，更新本地比较文件
+    return not cmpresult
+
+def makeupdatelist():
+    print "mkup"
+    filelist = []
+    with open('update.list','r') as f:
+        for line in f:
+            filelist.append(line.strip('\n'))   #按行读入文件列表
+    print filelist
+    return filelist
+	
+def pull_file():
+    print "pull file"
+    return None
 
 class FileEventHandler(FileSystemEventHandler):
     def __init__(self):
@@ -59,6 +93,7 @@ class FileEventHandler(FileSystemEventHandler):
             #print "directory moved from %s to %s" % (event.src_path,event.dest_path)
             return None
         else:
+            upfilelist.append("%s" % event.src_path)
             #print "file moved from %s to %s" % (event.src_path,event.dest_path)
             return None
 
@@ -68,7 +103,7 @@ class FileEventHandler(FileSystemEventHandler):
             return None
         else:
             #print "file created:%s" % event.src_path
-            filelist.append("%s" % event.src_path)
+            upfilelist.append("%s" % event.src_path)
             #print len(filelist)
             return None
 
@@ -86,7 +121,7 @@ class FileEventHandler(FileSystemEventHandler):
             return None
         else:
             #print "file modified:%s" % event.src_path
-            filelist.append("%s" % event.src_path)
+            upfilelist.append("%s" % event.src_path)
             #print len(filelist)
             return None
 
@@ -103,11 +138,13 @@ if __name__ == "__main__":
     observer.start()
     try:
         while True:
-            time.sleep(1)  #降低任务处理器占用
-            if len(filelist) > 0:
-                filelist = dict.fromkeys(filelist).keys()  #处理列表去除重复项
-                push_file(filelist[0])  #处理列表第一项
-                print len(filelist)  #使用pyinstaller前注释此句
+            time.sleep(5)  #降低任务处理器占用
+            if len(upfilelist) > 0:
+                upfilelist = dict.fromkeys(upfilelist).keys()  #处理列表去除重复项
+                push_file(upfilelist[0])  #处理列表第一项
+                print len(upfilelist)  #使用pyinstaller前注释此句
+            if check_update():
+                makeupdatelist()
     except KeyboardInterrupt:  #debug用
         observer.stop()
         #print adb_start()
