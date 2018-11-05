@@ -36,11 +36,12 @@ def adb_devices():
     return c_line.split("\t")[0].split("\r\n")[-1]   #单台已通过，有待调试多设备adb连接的情况
     
 def push_file(target_file):
-    #print "Pushing files" + target_file 
-    tmpfilename = str(time.time()) + os.path.splitext(target_file)[-1]  #adb不支持空格及中文路径，只识别ascii故重命名处理
+    print "Pushing files" + target_file 
+    #tmpfilename = str(time.time()) + os.path.splitext(target_file)[-1]  #adb不支持空格及中文路径，只识别ascii故重命名处理
+    tmpfilename = os.path.basename(target_file)   #根据需求，生产上传文件为ID+DATE文件名，全为ASCII且无需重命名
     #print tmpfilename
     shutil.copyfile(target_file,tmpfilename)
-    cmd = "adb push " + tmpfilename + remotedir   #sync仅支持data/system两个路径且比对读写大量临时文件，故使用push方案
+    cmd = "adb push " + tmpfilename +" "+ remotedir   #sync仅支持data/system两个路径且比对读写大量临时文件，故使用push方案
     #print cmd
     result = subprocess.Popen(cmd, shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE).communicate()[0]
     if len(result) < 1:  #有待调试出错策略
