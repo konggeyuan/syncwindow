@@ -145,8 +145,8 @@ if __name__ == "__main__":
     reload(sys)
     sys.setdefaultencoding('utf8')  #解决shell处理中文
     #print adb_start()
-    #dev = adb_devices()
-    print dev
+    dev = adb_devices()
+    #print dev
     observer = Observer()
     event_handler = FileEventHandler()
     observer.schedule(event_handler,workupdir,True)
