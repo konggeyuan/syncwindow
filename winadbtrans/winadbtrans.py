@@ -80,8 +80,12 @@ def makeupdatelist():
     print filelist
     return filelist
 	
-def pull_file():
+def pull_file(flist):
     print "pull file"
+    for file in flist: 
+        cmd = "adb pull " + remotedldir + file + " " + workdldir + "\\" + file #adb pull
+        #print cmd
+        result = subprocess.Popen(cmd, shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE).communicate()[0]
     return None
 
 def del_dir_file():
@@ -160,7 +164,8 @@ if __name__ == "__main__":
                 push_file(upfilelist[0])  #处理列表第一项
                 print len(upfilelist)  #使用pyinstaller前注释此句
             if check_update():
-                makeupdatelist()
+                pulllist=makeupdatelist()
+                pull_file(pulllist)  #取回文件
     except KeyboardInterrupt:  #debug用
         observer.stop()
         #print adb_start()
