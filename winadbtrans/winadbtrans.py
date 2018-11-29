@@ -40,7 +40,7 @@ def adb_devices():
     return c_line.split("\t")[0].split("\r\n")[-1]   #单台已通过，有待调试多设备adb连接的情况
     
 def push_file(target_file):
-    print "Pushing files" + target_file 
+    #print "Pushing files" + target_file 
     #tmpfilename = str(time.time()) + os.path.splitext(target_file)[-1]  #adb不支持空格及中文路径，只识别ascii故重命名处理
     tmpfilename = os.path.basename(target_file)   #根据需求，生产上传文件为ID+DATE文件名，全为ASCII且无需重命名
     #print tmpfilename
@@ -72,16 +72,16 @@ def check_update():
     return not cmpresult
 
 def makeupdatelist():
-    print "mkup"
+    #print "mkup"
     filelist = []
     with open('update.list','r') as f:
         for line in f:
             filelist.append(line.strip('\n'))   #按行读入文件列表
-    print filelist
+    #print filelist
     return filelist
 	
 def pull_file(flist):
-    print "pull file"
+    #print "pull file"
     for file in flist: 
         cmd = "adb pull " + remotedldir + file + " " + workdldir + "\\" + file #adb pull
         #print cmd
@@ -162,7 +162,7 @@ if __name__ == "__main__":
             if len(upfilelist) > 0:
                 upfilelist = dict.fromkeys(upfilelist).keys()  #处理列表去除重复项
                 push_file(upfilelist[0])  #处理列表第一项
-                print len(upfilelist)  #使用pyinstaller前注释此句
+                #print len(upfilelist)  #使用pyinstaller前注释此句
             if check_update():
                 pulllist=makeupdatelist()
                 pull_file(pulllist)  #取回文件
