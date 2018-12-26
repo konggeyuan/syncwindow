@@ -14,8 +14,8 @@ import filecmp
 
 
 
-workupdir = u'D:\\syncuptest'   #本地上传目录
-workdldir = u'D:\\syncdltest'   #本地下载目录
+workupdir = u'D:\\TBSCAN_CLOUD\\OUTBOX'   #本地上传目录
+workdldir = u'D:\\TBSCAN_CLOUD\\INBOX'   #本地下载目录
 remoteupdir = u'/storage/emulated/0/syncfile/'     #手机端上传目录
 remotedldir = u'/storage/emulated/0/syncfiledl/'     #手机端下载目录
 remotedllistfile = u'update.txt'    #手机端下载目录中更新列表文件
